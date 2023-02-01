@@ -3,18 +3,12 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <list>
+#include "chargeRateStructs.h"
 
-class chargeRange{
-    public:
-    long lowValue;
-    long highValue;
-    long readings;
-};
-
-const char* delimiter = ",";
-const int conversionBase = 10; 
-std::list<long> sessionValues = {};
-std::list<chargeRange> chargeRanges = {};
+#ifdef UTEST
+bool addParsedSession(const char* session);
+std::list<long> parseChargeSessions(char* sessions);
+std::list<chargeRange> calculateRanges();
+#endif // UTEST
 
 #endif // _CHARGE_RATE_H_
