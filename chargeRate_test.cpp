@@ -36,16 +36,21 @@ TEST_CASE("Parsing array of charging sessions"){
 TEST_CASE("Range calculation"){
     sessionValues.clear();
     chargeRanges.clear();
-    SECTION("Smallest set of valid digit sequences + isolated sessions"){
-        char sessions[] = "12, 4, 5, 9, 20";
+    SECTION("Different set of valid digit sequences + isolated sessions"){
+        char sessions[] = "12, 4, 5, 9, 20, 6, 4, 4, 13, 14";
         std::list<long> parsedSessions = parseChargeSessions(sessions);
         std::list<chargeRange> ranges = calculateRanges();
-        ranges = calculateReadings();
+        REQUIRE(ranges.size() == 2);
+        // 1st range evaluation
         std::list<chargeRange>::iterator it = ranges.begin();
-        REQUIRE(ranges.size() == 1);
+        REQUIRE(it->lowValue  == 12);
+        REQUIRE(it->highValue == 14);
+        REQUIRE(it->readings  == 3);
+        it++;
+        // 2nd range evaluation
         REQUIRE(it->lowValue  == 4);
-        REQUIRE(it->highValue == 5);
-        REQUIRE(it->readings  == 2);
+        REQUIRE(it->highValue == 6);
+        REQUIRE(it->readings  == 5);
         it++;
         REQUIRE(it == ranges.end());
     }
