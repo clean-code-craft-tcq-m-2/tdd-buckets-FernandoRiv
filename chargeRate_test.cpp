@@ -40,6 +40,13 @@ TEST_CASE("Range calculation"){
         char sessions[] = "12, 4, 5, 9, 20";
         std::list<long> parsedSessions = parseChargeSessions(sessions);
         std::list<chargeRange> ranges = calculateRanges();
+        ranges = calculateReadings();
+        std::list<chargeRange>::iterator it = ranges.begin();
         REQUIRE(ranges.size() == 1);
+        REQUIRE(it->lowValue  == 4);
+        REQUIRE(it->highValue == 5);
+        REQUIRE(it->readings  == 2);
+        it++;
+        REQUIRE(it == ranges.end());
     }
 }

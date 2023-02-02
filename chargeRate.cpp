@@ -1,4 +1,5 @@
 #include "chargeRate.h"
+#include <stdlib.h>
 //#include <stdio.h>
 
 // Conversion successfull = true, error = false
@@ -42,14 +43,16 @@ std::list<chargeRange> calculateRanges(){
     return chargeRanges;
 }
 
-void calculateReadings(){
-    for(auto rangeIt: chargeRanges){
+std::list<chargeRange> calculateReadings(){
+    for(std::list<chargeRange>::iterator rangeIt = chargeRanges.begin(); \
+        rangeIt != chargeRanges.end(); rangeIt++){
         for(auto value: sessionValues){
-            if(value >= rangeIt.lowValue  || value <= rangeIt.highValue){
-                rangeIt.readings++;
+            if(value >= rangeIt->lowValue && value <= rangeIt->highValue){
+                rangeIt->readings+=1;
             }
         }
     }
+    return chargeRanges;
 }
 
 void formatChargeSessions(){
