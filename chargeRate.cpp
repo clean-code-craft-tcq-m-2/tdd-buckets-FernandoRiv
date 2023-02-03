@@ -6,10 +6,12 @@
 // Conversion successfull = true, error = false
 bool addParsedSession(const char* session){
     char* sessionPtr;
-    long sessionValue = strtol(session, &sessionPtr, conversionBase);
-    if((errno == 0) && (*sessionPtr == '\0')){
-        sessionValues.push_back(sessionValue);
-        return true;
+    if (session != nullptr){
+        long sessionValue = strtol(session, &sessionPtr, conversionBase);
+        if((errno == 0) && (*sessionPtr == '\0')){
+            sessionValues.push_back(sessionValue);
+            return true;
+        }
     }
     return false;
 }
