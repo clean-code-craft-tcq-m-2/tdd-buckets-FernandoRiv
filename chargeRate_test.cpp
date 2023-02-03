@@ -43,7 +43,7 @@ TEST_CASE("Parsing array of charging sessions"){
 
 TEST_CASE("Range calculation"){
     sessionValues.clear();
-    chargeRanges.clear();
+    //chargeRanges.clear();
     SECTION("Different set of valid digit sequences + isolated sessions"){
         char sessions[] = "12, 4, 5, 9, 20, 6, 4, 4, 13, 14";
         char toStringArray[200];
