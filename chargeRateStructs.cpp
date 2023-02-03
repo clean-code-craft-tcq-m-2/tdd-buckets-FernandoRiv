@@ -18,7 +18,7 @@ bool chargeRange::calculateReadings(std::list<long> &samples){
 
 bool chargeRange::getRangeString(char *buffer, const unsigned int bufferSize){
     if(bufferSize > MINSTRBUFF){
-        sprintf(buffer, "%ld-%ld, %ld", lowValue, highValue, readings);
+        sprintf(buffer, "%ld-%ld, %ld\n", lowValue, highValue, readings);
         return true;
     }
     return false;
