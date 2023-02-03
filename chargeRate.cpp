@@ -1,6 +1,7 @@
 #include "chargeRate.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <cerrno>
 
 // Conversion successfull = true, error = false
 bool addParsedSession(const char* session){
@@ -37,28 +38,9 @@ std::list<chargeRange> calculateRanges(){
         }
         if(control != valueIt){
             chargeRange cRange(valueIt, control);
+            cRange.calculateReadings(values);
             chargeRanges.insert(rangeIt, cRange);
-            calculateReadings(values);
         }
     }
     return chargeRanges;
-}
-
-std::list<chargeRange> calculateReadings(std::list<long> &samples){
-    for(std::list<chargeRange>::iterator rangeIt = chargeRanges.begin(); \
-        rangeIt != chargeRanges.end(); rangeIt++){
-        for(std::list<long>::iterator sampleIt = samples.begin(); 
-            sampleIt != samples.end(); sampleIt++){
-            if((*sampleIt >= rangeIt->lowValue) && \
-               (*sampleIt <= rangeIt->highValue)){
-                samples.erase(sampleIt);
-                rangeIt->readings+=1;
-            }
-        }
-    }
-    return chargeRanges;
-}
-
-void formatChargeSessions(){
-
 }

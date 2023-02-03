@@ -8,7 +8,6 @@
 bool addParsedSession(const char* session);
 std::list<long> parseChargeSessions(char* sessions);
 std::list<chargeRange> calculateRanges();
-std::list<chargeRange> calculateReadings(std::list<long> &samples);
 #endif // UTEST
 
 #endif // _CHARGE_RATE_H_
