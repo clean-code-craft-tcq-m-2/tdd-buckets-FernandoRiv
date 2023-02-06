@@ -52,19 +52,19 @@ TEST_CASE("Range calculation"){
         REQUIRE(ranges.size() == 2);
         // 1st range evaluation
         std::list<chargeRange>::iterator it = ranges.begin();
+        REQUIRE(it->lowValue  == 4);
+        REQUIRE(it->highValue == 6);
+        REQUIRE(it->readings  == 5);
+        REQUIRE(it->getRangeString(toStringArray, sizeof(toStringArray)));
+        REQUIRE(strcmp(toStringArray, "4-6, 5\n") == 0);
+        it++;
+        // 2nd range evaluation
         REQUIRE(it->lowValue  == 12);
         REQUIRE(it->highValue == 14);
         REQUIRE(it->readings  == 3);
         REQUIRE(it->getRangeString(toStringArray, sizeof(toStringArray)));
         REQUIRE(strcmp(toStringArray, "12-14, 3\n") == 0);
         it++;
-        // 2nd range evaluation
-        REQUIRE(it->lowValue  == 4);
-        REQUIRE(it->highValue == 6);
-        REQUIRE(it->readings  == 5);
-        REQUIRE(it->getRangeString(toStringArray, sizeof(toStringArray)));
-        REQUIRE(strcmp(toStringArray, "4-6, 5\n") == 0);
-        // it++;
-        // REQUIRE(it == ranges.end());
+        REQUIRE(it == ranges.end());
     }
 }

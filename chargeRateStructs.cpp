@@ -9,7 +9,6 @@ bool chargeRange::calculateReadings(std::list<long> &samples){
     for(std::list<long>::iterator sampleIt = samples.begin(); 
         sampleIt != samples.end(); sampleIt++){
         if((*sampleIt >= lowValue) && (*sampleIt <= highValue)){
-            samples.erase(sampleIt);
             readings+=1;
         }
     }

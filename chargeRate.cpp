@@ -31,16 +31,18 @@ std::list<chargeRange> calculateRanges(){
     std::list<long> values = sessionValues;
     values.sort();
     std::list<chargeRange>::iterator rangeIt = chargeRanges.begin();
-    for(auto valueIt: sessionValues){
-        long control = valueIt;
+    for(std::list<long>::iterator valueIt = values.begin();
+        valueIt != values.end(); valueIt++){
+        long control = *valueIt;
         for(auto samples: values){
             if (control+1 == samples){
                 control++;
             }
         }
-        if(control != valueIt){
-            chargeRange cRange(valueIt, control);
+        if(control != *valueIt){
+            chargeRange cRange(*valueIt, control);
             cRange.calculateReadings(values);
+            std::advance(valueIt,(cRange.readings-1));
             chargeRanges.insert(rangeIt, cRange);
         }
     }
