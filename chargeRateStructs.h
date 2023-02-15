@@ -2,23 +2,25 @@
 #include <stdio.h>
 const unsigned int MINSTRBUFF = 100;
 
+typedef long SessionVal;
+
 class chargeRange{
     public:
-    long lowValue;
-    long highValue;
-    long readings;
+    SessionVal lowValue;
+    SessionVal highValue;
+    SessionVal readings;
 
-    chargeRange(long lVal=0, long hVal=0, long reads=0):
+    chargeRange(SessionVal lVal=0, SessionVal hVal=0, SessionVal reads=0):
         lowValue(lVal),
         highValue(hVal),
         readings(reads)
     {}
 
-    bool calculateReadings(std::list<long> &samples);
+    bool calculateReadings(std::list<SessionVal> &samples);
     bool getRangeString(char *buffer, const unsigned int bufferSize);
 };
 
 extern const char* delimiter;
 extern const int conversionBase; 
-extern std::list<long> sessionValues;
-extern std::list<chargeRange> chargeRanges;
+extern const int max12BitCurrent;
+extern const int intMax12Bit;

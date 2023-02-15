@@ -2,11 +2,11 @@
 
 const char* delimiter = ",";
 const int conversionBase = 10; 
-std::list<long> sessionValues = {};
-std::list<chargeRange> chargeRanges = {};
+const int max12BitCurrent = 10;
+const int intMax12Bit = 4094;
 
-bool chargeRange::calculateReadings(std::list<long> &samples){
-    for(std::list<long>::iterator sampleIt = samples.begin(); 
+bool chargeRange::calculateReadings(std::list<SessionVal> &samples){
+    for(std::list<SessionVal>::iterator sampleIt = samples.begin(); 
         sampleIt != samples.end(); sampleIt++){
         if((*sampleIt >= lowValue) && (*sampleIt <= highValue)){
             readings+=1;

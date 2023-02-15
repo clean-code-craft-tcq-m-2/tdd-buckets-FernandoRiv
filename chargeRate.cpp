@@ -2,38 +2,75 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <cerrno>
+#include <cmath>
 
-// Conversion successfull = true, error = false
-bool addParsedSession(const char* session){
+static bool cValToSVal(const char* cVal, SessionVal &parsedValue){
     char* sessionPtr;
-    if (session != nullptr){
-        long sessionValue = strtol(session, &sessionPtr, conversionBase);
+    if (cVal != nullptr){
+        long cValue = strtol(cVal, &sessionPtr, conversionBase);
         if((errno == 0) && (*sessionPtr == '\0')){
-            sessionValues.push_back(sessionValue);
+            parsedValue = cValue;
             return true;
         }
     }
     return false;
 }
 
-std::list<long> parseChargeSessions(char* sessions){
+static bool parseChargeSessions(char* sessions,
+        std::list<SessionVal> &sessionList,
+        bool (*parseFunc)(const char* c, std::list<SessionVal> &sl)){
     char* rawSample;
-    addParsedSession(sessions);
+    parseFunc(sessions, sessionList);
     rawSample = strtok(sessions, delimiter);
     while(rawSample != NULL){
-        addParsedSession(rawSample);
+        parseFunc(rawSample, sessionList);
         rawSample = strtok(NULL, delimiter);
     }
-    return sessionValues;
+    return (sessionList.size() != 0);
 }
 
-std::list<chargeRange> calculateRanges(){
-    std::list<long> values = sessionValues;
+bool addDirectSession(const char* session, 
+        std::list<SessionVal> &sessionList){
+    SessionVal sessionValue;
+    if(cValToSVal(session, sessionValue)){
+        sessionList.push_back(sessionValue);
+        return true;
+    }
+    return false;
+}
+
+bool parseDirectChargeSession(char* sessions, 
+        std::list<SessionVal> &sessionList){
+    return parseChargeSessions(sessions, sessionList, addDirectSession);
+}
+
+bool add12BitSession(const char* session,
+        std::list<SessionVal> &sessionList){
+    SessionVal sessionValue;
+    if(cValToSVal(session, sessionValue)){
+        if((sessionValue <= intMax12Bit) && (sessionValue > 0)){
+            sessionValue = round(((float)max12BitCurrent * (float)sessionValue)\
+                                /(float)intMax12Bit);
+            sessionList.push_back(sessionValue);
+        }
+        return true;
+    }
+    return false;
+}
+
+bool parse12BitChargeSession( char* sessions,
+        std::list<SessionVal> &sessionList){
+    return parseChargeSessions(sessions, sessionList, add12BitSession);
+}
+
+bool calculateRanges(std::list<SessionVal> &sessionList,
+        std::list<chargeRange> &chargeRangeList){
+    std::list<SessionVal> values = sessionList;
     values.sort();
-    std::list<chargeRange>::iterator rangeIt = chargeRanges.begin();
-    for(std::list<long>::iterator valueIt = values.begin();
+    std::list<chargeRange>::iterator rangeIt = chargeRangeList.begin();
+    for(std::list<SessionVal>::iterator valueIt = values.begin();
         valueIt != values.end(); valueIt++){
-        long control = *valueIt;
+        SessionVal control = *valueIt;
         for(auto samples: values){
             if (control+1 == samples){
                 control++;
@@ -43,8 +80,8 @@ std::list<chargeRange> calculateRanges(){
             chargeRange cRange(*valueIt, control);
             cRange.calculateReadings(values);
             std::advance(valueIt,(cRange.readings-1));
-            chargeRanges.insert(rangeIt, cRange);
+            chargeRangeList.insert(rangeIt, cRange);
         }
     }
-    return chargeRanges;
+    return (chargeRangeList.size() != 0);
 }
